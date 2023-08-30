@@ -1,9 +1,9 @@
-function TodoCounter() {
+function TodoCounter({ total, completed }) {
     return (
         <h1>
-            Has completado 3 de 5 ToDo
+            Has completado {completed} de {total} ToDo
         </h1>
     );
 }
 
-export {TodoCounter};
+export { TodoCounter };
