@@ -18,8 +18,14 @@ function App() {
   const [ToDos, setToDos] = React.useState(defaultTodos);
   const [searchValue, setSearchValue] = React.useState('');
 
+  // Definiendo estados derivados
   const completedTodos = ToDos.filter(todo => !!todo.completed).length;
   const totalTodos = ToDos.length;
+  const searchedTodos = ToDos.filter((todo) => {
+    const todoText = todo.text.toLowerCase();
+    const searchText = searchValue.toLocaleLowerCase();
+    return todoText.includes(searchText);
+  });
 
   return (
     <React.Fragment>
@@ -28,7 +34,7 @@ function App() {
       <TodoSearch searchValue={searchValue} setSearchValue={setSearchValue}/>
 
       <TodoList>
-        {defaultTodos.map(todo => (
+        {searchedTodos.map(todo => (
           <TodoItem key={todo.text} text={todo.text} completed={todo.completed}/>
         ))}
       </TodoList>
