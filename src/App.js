@@ -16,19 +16,30 @@ import React from 'react';
 // localStorage.setItem('TODOS_v1', JSON.stringify(defaultTodos));
 // localStorage.removeItem('TODOS_v1');
 
-function App() {
-  const localStorageTodos = localStorage.getItem('TODOS_v1')
-  let parsedTodos;
+function useLocalStorage(itemName, initialValue) {
+  const localStorageItem = localStorage.getItem(itemName)
+  let parsedItem;
 
-  if(!localStorageTodos) {
-    localStorage.setItem('TODOS_v1', JSON.stringify([]))
-    parsedTodos = [];
+  if (!localStorageItem) {
+    localStorage.setItem('TODOS_v1', JSON.stringify(initialValue));
+    parsedItem = initialValue;
   } else {
-    parsedTodos = JSON.parse(localStorageTodos)
+    parsedItem = JSON.parse(localStorageItem)
+  }
+  
+  const [item, setItem] = React.useState(parsedItem)
+
+  const saveItem = (newItem) => {
+    localStorage.setItem(itemName, JSON.stringify(newItem))
+    setItem(newItem);
   }
 
+  return [item,  saveItem];
+}
+
+function App() {
   // Definiendo estados
-  const [ToDos, setToDos] = React.useState(parsedTodos);
+  const [ToDos, saveTodos] = useLocalStorage('TODOS_v1', []);
   const [searchValue, setSearchValue] = React.useState('');
 
   // Definiendo estados derivados
@@ -39,11 +50,6 @@ function App() {
     const searchText = searchValue.toLocaleLowerCase();
     return todoText.includes(searchText);
   });
-
-  const saveTodos = (newTodos) => {
-    localStorage.setItem('TODOS_v1', JSON.stringify(newTodos))
-    setToDos(newTodos);
-  }
 
   const completeTodo = (text) => {
     const newTodos = [...ToDos];
@@ -67,10 +73,10 @@ function App() {
 
       <TodoList>
         {searchedTodos.map(todo => (
-          <TodoItem 
-            key={todo.text} 
-            text={todo.text} 
-            completed={todo.completed} 
+          <TodoItem
+            key={todo.text}
+            text={todo.text}
+            completed={todo.completed}
             onComplete={() => completeTodo(todo.text)}
             onDelete={() => deleteTodo(todo.text)} />
         ))}
