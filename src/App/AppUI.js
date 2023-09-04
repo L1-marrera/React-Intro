@@ -8,6 +8,7 @@ import { TodosError } from '../TodosError';
 import { EmptyTodos } from '../EmptyTodos';
 import { TodoContext } from '../TodoContext';
 import { Modal } from '../Modal';
+import { TodoForm} from '../TodoForm'
 import React from 'react';
 
 function AppUI() {
@@ -36,7 +37,7 @@ function AppUI() {
                     </>
                 }
                 {error && < TodosError />}
-                {!loading && searchedTodos === 0 && <EmptyTodos />}
+                {(!loading && searchedTodos === 0) && <EmptyTodos />}
 
                 {searchedTodos.map(todo => (
                     <TodoItem
@@ -48,9 +49,12 @@ function AppUI() {
                 ))}
             </TodoList>
 
-            <CreateTodoButton />
+            <CreateTodoButton setOpenModal={setOpenModal} />
 
-            {openModal && <Modal>La funcionalidad de agregar TODO</Modal>}
+            {openModal && (
+                <Modal>
+                    <TodoForm />
+                </Modal>)}
 
         </React.Fragment>
     );
